@@ -1,0 +1,60 @@
+declare
+TS = btree(42 left:btree(24 left:btree(12 left:leaf right: leaf) right:leaf) right:leaf)
+TR = leaf
+fun {FromTreeToList T}
+   case T
+   of btree(V left:leaf right:leaf) then [V]
+   [] btree(V left:leaf right:R) then {Append [V] {FromTreeToList R}}
+   [] btree(V left:L right:leaf) then {Append {FromTreeToList L} [V]}
+   [] btree(V left:L right:R) then {Append {Append {FromTreeToList L} [V]} {FromTreeToList R}}
+   else nil
+   end
+end
+fun {InsVal T V}
+   {Browse T}
+   {Browse V}
+   if T == leaf then
+      {Browse '=leaf'}
+      btree(V left:leaf right:leaf)
+   elseif V > T.1 then
+      {Browse '>'}
+      T.right = {InsVal T.right V}
+   elseif V < T.1 then
+      {Browse '<'}
+      T.left = {InsVal T.left V}
+   else
+      {Browse '=='}
+      T
+   end
+end
+fun {FromListToTree L}
+   local Tree
+      fun {TravList L TR}
+	 case L
+	 of H|T then
+	    TR = {InsVal TR H}
+	    TR = {TravList T TR} 
+	    TR
+	 [] nil then TR
+	 end
+      end
+   in
+      Tree = leaf
+      {TravList L Tree}
+   end
+end
+T2 = {InsVal leaf 42}
+T1 = {InsVal TR 42}
+T3 = {FromListToTree [42]}
+
+{Browse {FromTreeToList TS}}
+{Browse TS.1}
+{Browse T1}
+{Browse T2}
+TR = btree(42 left:leaf right:leaf)
+{Browse TR}
+{Browse TR.left}
+TR.left = TR
+T1.left = btree(24 left:leaf right:leaf)
+{Browse {InsVal T1 42}}
+{Browse {InsVal T1 24}}

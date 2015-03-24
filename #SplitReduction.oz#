@@ -1,0 +1,59 @@
+declare X1 X2 LIn X3 X4 X5
+proc {Split L L1 L2}
+   local proc {SplitLoop L Q1 Q2}
+			case L
+			of nil then
+			   L1 = {Reverse Q1}
+			   L2 = {Reverse Q2}
+			[] H|nil then {SplitLoop nil H|Q1 Q2}
+			[] H1|H2|T then {SplitLoop T H1|Q1 H2|Q2}
+			end
+		 end
+   in
+	  {SplitLoop L nil nil}
+   end
+end
+fun {Reduction L A B C D}
+   local L1 L2 X1 X2 X3 X4 S1 S2 S3 S4
+	  fun {SumWithK Xs K}
+		 {FoldL Xs fun {$ X Y} Y * K + X end 0}
+	  end
+   in
+	  {Split L L1 L2}
+	  {Split L1 X1 X3}
+	  {Split L2 X2 X4}
+	  S1 = {SumWithK X1 A}
+	  S2 = {SumWithK X2 B}
+	  S3 = {SumWithK X3 C}
+	  S4 = {SumWithK X4 D}
+	  S1 + S2 + S3 + S4
+   end
+end
+LIn = [1 2 3 4]
+{Split LIn X1 X2}
+{Browse X1}
+{Browse X2}
+declare W1 W2 W3 W4 E1 E2 F1 F2 Ys Zs Zss Xs
+{Split X1 W1 W3}
+{Split X2 W2 W4}
+{Browse W1}
+{Browse W2}
+{Browse W3}
+{Browse W4}
+F1 = fun {$ N} fun {$ V} N * V end end
+F2 = {F1 3}
+E1 = {Map LIn F2}
+E2 = {Map LIn fun {$ X} X * 5 end}
+{Browse E1}
+{Browse E2}
+{Browse {F2 4}}
+{List.partition [1 4 2 3 6 5] IsOdd Zs Zss}
+{List.partitionInd [1 4 2 3 6 5] fun {$ X Y} {IsOdd X} end X3 X4}
+{Browse Zs}
+{Browse Zss}
+{Browse X3}
+{Browse X4}
+X5 = {Reduction LIn 1 2 3 4}
+{Browse X5}
+Xs = {Reduction [1 2 3 4 1 2 3 4] 4 3 2 1}
+{Browse Xs}

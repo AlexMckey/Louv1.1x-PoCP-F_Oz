@@ -1,0 +1,61 @@
+declare
+class Stack
+   attr SL
+   meth init
+      SL := {NewCell nil}
+   end
+   meth size($)
+      {Length @SL}
+   end
+   meth isEmpty($)
+      @SL==nil
+   end
+   meth top($)
+      case @SL
+      of H|T then H
+      else raise emptyStack end
+      end
+   end
+   meth pop($)
+      case @SL
+      of H|T then
+	 SL := T
+	 H
+      else raise emptyStack end
+      end
+   end
+   meth push(X)
+      SL := X|@SL
+   end
+end
+class Queue
+   attr QL
+   meth init
+      QL := {NewCell nil}
+   end
+   meth size($)
+      {Length @QL}
+   end
+   meth isEmpty($)
+      @QL==nil
+   end
+   meth front($)
+      case @SL
+      of H|T then H
+      else raise emptyQueue end
+      end
+   end
+   meth dequeue($)
+      case @QL
+      of H|T then
+	 QL := T
+	 H
+      else raise emptyQueue end
+      end
+   end
+   meth enqueue(X)
+      QL := {Reverse X|{Reverse @SL}}
+   end
+end
+
+{Browse {Reverse [1 2 3 4 5]}}
